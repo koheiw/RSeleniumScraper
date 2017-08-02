@@ -82,7 +82,7 @@ open_browser(url_login) # a new browser window will open
 
 ### Download setting
 
-Before starting download, you have to search query, download period, and size of search window. With the following setting, the scraper will download news articles that contain "Brexit" between 1 January 2016 and 31 December 2016 separately for each month:
+Before starting download, you have to decide search query, download period, and size of search window. In this example, the scraper will download news articles that contain "Brexit" pulished between 1 January 2016 and 31 December 2016 separately for each month:
 
 ``` r
 query <- "Brexit"
