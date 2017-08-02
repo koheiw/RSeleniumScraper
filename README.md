@@ -49,8 +49,8 @@ Sometimes, you have to tell **Selenium** the location of **geckodriver** (in the
 
 You can stop the Selenium sever by pressing `Ctrol + C`.
 
-Run Nexis Scraper
------------------
+Install this package
+--------------------
 
 Since this package is in a private repository, you cannot use `devtools::install_github('koheiw/Nexis')`. You have to either clone the repository and build or download in a zip file and install:
 
