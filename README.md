@@ -1,5 +1,5 @@
-The Nexis scraper
-=================
+The Nexis scraper in R
+======================
 
 This is a package to automatically search and download news articles from the Nexis database. This package is developed to promote large scale analysis in media and communications research to investigate problems in mass communication in the rapidly changing world.
 
@@ -25,15 +25,12 @@ Web scraping is not an reliable technology as it depends on the HTML tags in web
 How to use
 ==========
 
-Setup
------
+System setup
+------------
 
-### Install programs
+### Install JRE
 
-**R** and **Java Runtime Enviromnet** have to be installed to use this package. JRE is required to run the Selenium server.
-
--   R (&gt;= 3.2.2)
--   [Java Runtime Environment 8](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) (9 has problem with Selenium Server)
+You have to install [Java Runtime Environment 8](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html) to use this package. JRE is required to run the Selenium server. The JRE 9 is the latest, but it tend to have problem with Selenium.
 
 ### Start Selenium server
 
@@ -49,8 +46,10 @@ Sometimes, you have to tell **Selenium** the location of **geckodriver** (in the
 
 You can stop the Selenium sever by pressing `Ctrol + C`.
 
-Install this package
---------------------
+Package setup
+-------------
+
+### Install
 
 Since this package is in a private repository, you cannot use `devtools::install_github('koheiw/Nexis')`. You have to either clone the repository and build or download in a zip file and install:
 
@@ -59,8 +58,7 @@ devtools::install("/home/kohei/Downloads/Nexis-master/") # unzipped folder
 require('Nexis')
 ```
 
-File location
--------------
+### File location
 
 You first have to set a directory where downloaded files are saved:
 
@@ -68,8 +66,7 @@ You first have to set a directory where downloaded files are saved:
 set_directory('/home/kohei/Documents/Nexis')
 ```
 
-Login to database
------------------
+### Login to database
 
 You have to login to the Nexis database using your library account in the browser windows opened up by `open_browser()`. You can manually navigate to the database from the library website, or can directly access from <https://www.nexis.com> using *Academic Sign-in*.
 
@@ -83,8 +80,7 @@ url_login <- 'https://www.lexisnexis.com/start/shib/idpurlrd?entityID=https%3A%2
 open_browser(url_login) # a new browser window will open
 ```
 
-Download setting
-----------------
+### Download setting
 
 Before starting download, you have to search query, download period, and size of search window. With the following setting, the scraper will download news articles that contain "Brexit" between 1 January 2016 and 31 December 2016 separately for each month.
 
@@ -96,8 +92,7 @@ size <- 1
 unit <- 'month'
 ```
 
-Start download
---------------
+### Start download
 
 Finally, start automated download:
 
