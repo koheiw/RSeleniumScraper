@@ -206,23 +206,9 @@ get_prefs <- function(browser) {
                  "browser.download.folderList" = 2L,
                  "browser.download.manager.showWhenStarting" = FALSE,
                  "browser.helperApps.neverAsk.saveToDisk" = paste0(
-                     'multipart/x-zip',
-                     'application/zip',
-                     'application/x-zip-compressed',
-                     'application/x-compressed',
-                     'application/msword',
-                     'application/csv',
-                     'text/csv',
-                     'image/png ',
-                     'image/jpeg',
-                     'application/pdf',
                      'text/html',
                      'text/plain',
-                     ' application/excel',
-                     'application/vnd.ms-excel',
-                     'application/x-excel',
-                     'application/x-msexcel',
-                     'application/octet-stream', sep = ',')))
+                     sep = ',')))
 
     }
     return(prefs)
