@@ -34,7 +34,7 @@ You have to install [Java Runtime Environment 8](http://www.oracle.com/technetwo
 
 ### Start Selenium server
 
-You have to run the Selenium sever *before* using this package. Selenium Server is available at [SeleniumHQ](http://www.seleniumhq.org/download/). This repository contains the Selenium Standalone Sever (selenium-server-standalone-3.4.0.jar) and a web driver for Firefox (**geckodriver**) in [bin directory](https://github.com/koheiw/Nexis/tree/master/bin) to download.
+You have to run the Selenium sever *before* using this package. Selenium Standalone Server is available at [SeleniumHQ](http://www.seleniumhq.org/download/). This repository contains Selenium Standalone Sever (selenium-server-standalone-3.4.0.jar) and a web driver for Firefox (**geckodriver**) in [bin directory](https://github.com/koheiw/Nexis/tree/master/bin) for download.
 
 To run Selenium Standalone Sever, you only need to type the following command in the console:
 
@@ -42,7 +42,7 @@ To run Selenium Standalone Sever, you only need to type the following command in
 
 Sometimes, you have to tell **Selenium** the location of **geckodriver** (in the same directory, in this example):
 
-    java -jar -Dwebdriver.gecko.driver=geckodriver selenium-server-standalone-3.4.0.jar
+    java -jar -Dwebdriver.gecko.driver=./geckodriver selenium-server-standalone-3.4.0.jar
 
 You can stop the Selenium sever by pressing `Ctrol + C`.
 
