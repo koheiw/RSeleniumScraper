@@ -3,7 +3,7 @@ The Nexis scraper in R
 
 This is a package to automatically search and download news articles from the Nexis database. This package is developed to promote large scale analysis in media and communications research to investigate problems in mass communication in the rapidly changing world.
 
-LexisNexis demands users high extra fees to access to the [Nexis API](https://www.lexisnexis.com/webserviceskit/), preventing the academics from using the data in research. Until the company to decide offering the API to academic users for no or small extra costs, scraping is the only way for the academics to embark on large scale analysis of news content.
+LexisNexis demands users high extra fees to access to the [Nexis API](https://www.lexisnexis.com/webserviceskit/), preventing the academics from using the data in research. Until the company to decide offering academic users the API for no or small extra costs, scraping is the only way for us to embark on large scale analysis of news content.
 
 This package provides automated access to the Nexis database through a web browser. Web browsing is manipulated using [**Selenium**](http://www.seleniumhq.org/) to search and download news articles without human attendance. Depending on the Nexis server response time, this scraper can download around 30,000 news articles per hour to your laptop or desktop machine.
 
