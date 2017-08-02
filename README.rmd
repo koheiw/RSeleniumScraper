@@ -1,48 +1,50 @@
-Nexis UK scraper
-================
+---
+title: "Nexis UK scraper"
+author: Kohei Watanabe
+date: Auguest 2, 2017
+output: 
+    md_document:
+        variant: markdown_github
+---
 
-This is a package to automatically search and download news articles from the Nexis UK databse. This package is developed to promote large scale analysis in media and communications reserach to investiate problems in mass communication in the rapidly changing world.
+# Nexis UK scraper
+
+This is a package to automatically search and download news articles from the Nexis UK databse. This package is developed to promote large scale analysis in media and communications reserach to investiate problems in mass communication in the  rapidly changing world. 
 
 Nexis only offers [its API](https://www.lexisnexis.com/webserviceskit/) for high extra fees, preveting the academics from accessing the data. Until the company decide to provide academic users with an API for no or reasonable costs, scraping is the only way for the academics to embark on large scale analysis of news content.
 
 This package provides automated access to the Nexis database through a web browser. Web browsersing is manipulated using [**Selenium**](http://www.seleniumhq.org/) to search and download news articles without human attendance. Depending on the Nexis server response time, this scraper can download around 30,000 news atriles per hour to your laptop or desktop machine.
 
-Target database
----------------
-
+## Target database
 Nexis has different interfaces for the news database. This scraper is designed for [Nexis UK](https://github.com/koheiw/Nexis/blob/master/img/screenshot.png) which is used in the UK and Irish universities. For other interfaces, functions in this package needs to be modified.
 
-Supported browser
------------------
-
+## Supported browser
 Currently, this package only supports scraping by **Firefox** is supported, but it is realtely easy to add **Chrome**.
 
-Future updates
---------------
-
+## Future updates 
 Web scraping is not an reliable technology as it depends on the HTML tags in the web pages that are frequently updated. This scraper also has to be updated to keep up with the changes in Nexis database. If this package suddenly stops working, try the latest version of this package. If it still do not work, file an issue in this repository, or writre a patch and submit a pull request.
 
-**RSelenium**
 
-Setup
------
+ **RSelenium**
 
-### Download and install packages and libraries
+## Setup
 
-``` r
+### Download and install packages and libraries 
+```{r eval=FALSE}
 devtools::install_github('koheiw/Nexis/')
 ```
 
 ### Execute Selenium server
+```
+java -jar selenium-server-standalone-3.4.0.jar
+```
 
-    java -jar selenium-server-standalone-3.4.0.jar
+## Setting
 
-Setting
--------
+https://www.lexisnexis.com/start/shib/wayf
 
-<https://www.lexisnexis.com/start/shib/wayf>
 
-``` r
+```{r eval=FALSE}
 require('Nexis')
 
 #login_url <- 'http://www.lse.ac.uk/library'
@@ -56,20 +58,19 @@ size <- 1
 unit <- 'month'
 ```
 
-Download
---------
+## Download
 
 ### Step 1: open Nexis in browser
+```{r eval=FALSE}
 
-``` r
 set_directory(dir)
 open_browser(login_url)
 find_window()
 ```
 
 ### Step 2: execute the scraper
+```{r eval=FALSE}
 
-``` r
 dates <- get_date_range(from, to, size, unit)
 for (i in seq_along(dates)) {
     if (is_completed(dates[[i]])) next
@@ -80,4 +81,6 @@ for (i in seq_along(dates)) {
         download(dates[[i]], ranges[[j]], tail(unlist(ranges), 1))
     }
 }
+
+
 ```
