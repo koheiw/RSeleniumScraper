@@ -39,7 +39,7 @@ You have to install [Java Runtime Environment 8](http://www.oracle.com/technetwo
 
 ### Start Selenium server
 
-You have to run the Selenium sever *before* using this package. Selenium Standalone Server is available at [SeleniumHQ](http://www.seleniumhq.org/download/). This repository also contains Selenium Standalone Sever (selenium-server-standalone-3.4.0.jar) and a web driver for Firefox (**geckodriver**) in [a sub-directory](https://github.com/koheiw/Nexis/tree/master/bin) for download.
+You have to run the Selenium sever *before* using this package. Selenium Standalone Server is available at [SeleniumHQ](http://www.seleniumhq.org/download/). This repository also contains Selenium Standalone Sever (selenium-server-standalone-3.4.0.jar) in [a sub-directory](https://github.com/koheiw/Nexis/tree/master/bin) for download, but not a web driver for Firefox (**geckodriver**). Please download [**geckodriver**](https://github.com/mozilla/geckodriver/releases) and save it to the same directory as the Selenium server.
 
 To start Selenium Standalone Sever, you only need to run the following command in the console:
 
