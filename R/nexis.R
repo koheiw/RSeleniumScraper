@@ -79,12 +79,14 @@ search <- function(query, date, date_format = "%m/%d/%Y") {
 
     # User custom date range
     elem <- Nexis:::nexis$driver$findElement('xpath', ".//*[@id='specifyDateDefaultStyle']/option[@value='from']")
-    elem$clickElement()
+    if (!length(elem$getElementAttribute("selected"))) {
+        elem$clickElement()
+    }
 
     Sys.sleep(1)
 
     # Set date range
-    elem <-  Nexis:::nexis$driver$findElement('xpath', ".//*[@id='fromDate']")
+    elem <- Nexis:::nexis$driver$findElement('xpath', ".//*[@id='fromDate']")
     elem$clearElement()
     elem$sendKeysToElement(list(format(date[1], date_format)))
     elem$setElementAttribute("value", format(date[1], date_format))
