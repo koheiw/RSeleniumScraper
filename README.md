@@ -1,7 +1,7 @@
 The Nexis scraper in R
 ======================
 
-This is an R package to automatically search and download news articles from the Nexis database. This package is developed aiming to promote large scale content analysis that investigates problems in mass communication in information-saturted society.
+This is an R package to automatically search and download news articles from the Nexis database. This package is developed aiming to promote large scale content analysis that investigates problems in mass communication in information-saturated society.
 
 LexisNexis demands users high extra fees to access to the [Nexis API](https://www.lexisnexis.com/webserviceskit/), preventing the academic users from analysing large dataset in research. Until the company to decide offering academic users the API for no or small extra costs, scraping is the only way for them to embark on large scale analysis of news content.
 
@@ -21,6 +21,11 @@ Future updates
 --------------
 
 Web scraping is not a reliable technology as it depends on the HTML tags in web pages that are frequently updated. Therefore, this scraper has to be well maintained to keep up with the changes in Nexis database. If the scraper suddenly stops working, try the latest version available in this repository. If it does not solve the problem, please file an issue or writer a patch and submit a pull request.
+
+Redistributon
+-------------
+
+This package is open-source program license under GPL-3, so your can send it to your friends. If your friends wish to use the latest version of the package, contact Kohei Watanabe (<watanabe.kohei@gmail.com>) requesting access to the repository. However, please do not to upload the package to a website anyone can access to, because scraping is not officially allowed by LexisNexis.
 
 How to use
 ==========
@@ -82,7 +87,7 @@ open_browser(url_login) # a new browser window will open
 
 ### Download setting
 
-Before starting download, you have to decide search query, download period, and size of search window. In this example, the scraper will download news articles that contain "Brexit" pulished between 1 January 2016 and 31 December 2016 separately for each month:
+Before starting download, you have to decide search query, download period, and size of search window. In this example, the scraper will download news articles that contain "Brexit" published between 1 January 2016 and 31 December 2016 separately for each month:
 
 ``` r
 query <- "Brexit"
