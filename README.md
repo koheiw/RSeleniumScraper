@@ -49,6 +49,12 @@ Sometimes, you have to tell **Selenium** the location of **geckodriver** (in the
 
     java -jar -Dwebdriver.gecko.driver=./geckodriver selenium-server-standalone-3.4.0.jar
 
+On Windows, the command looks slightly different:
+
+    java.exe -Dwebdriver.gecko.driver=./geckodriver.exe -jar selenium-server-standalone-3.4.0.jar
+
+Note that you have the directory that contains Java executable in the system path. On Windows, `java.exe` is usually located in `C:\Program Files (x86)\Java\jre1.8.0_144\bin`. Please refer to [other source](https://www.howtogeek.com/118594/how-to-edit-your-system-path-for-easy-command-line-access/) for how to add a directory to the system path. After adding to the system path, your Windows needs restart.
+
 You can stop the Selenium server by pressing `Ctrl + C`.
 
 Package setup
