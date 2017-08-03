@@ -25,7 +25,7 @@ Web scraping is not a reliable technology as it depends on the HTML tags in web 
 Redistributon
 -------------
 
-This package is open-source program license under GPL-3, so your can send it to your friends. If your friends wish to use the latest version of the package, contact Kohei Watanabe (<watanabe.kohei@gmail.com>) requesting access to the repository. However, please do not to upload the package to a website anyone can access to, because scraping is not officially allowed by LexisNexis.
+This package is open-source program license under GPL-3, so you can share it with your friends. If your friends wish to use the latest version of the package, contact Kohei Watanabe (<watanabe.kohei@gmail.com>) requesting access to the repository. However, please do not to upload the package to a website anyone can access to, because scraping is not officially allowed by LexisNexis.
 
 How to use
 ==========
