@@ -37,9 +37,12 @@ open_browser <- function (url, browser = "firefox") {
     nexis$driver$navigate(url)
 }
 
-
+#' check login status and move to Power Search
+#'
+#' This funtion check if the user is logged into Nexis database. If so, move to
+#' Power Search page.
 #' @export
-find_window <- function() {
+check_login <- function() {
     if (!select_window('Nexis®:')) {
         stop("Your have to login to Nexis using your library account\n")
     }
@@ -47,8 +50,19 @@ find_window <- function() {
     click_powersearch()
 }
 
+
+#' set and submit search query
+#'
+#' This function sets search keyword and data, and submit to the database. Users
+#' should select sources manually before running this command.
+#' @param query a query string for Nexis database
+#' @param date a vector Date object created by \code{get_date_range()}. The fist
+#'   date is the first day and second element is the last day of the serach
+#'   period.
+#' @param format format the date. It should be "\%d\%m/\%Y" for Nexis UK, but
+#'   "\%m/\%d/\%Y" for other versions.
 #' @export
-search <- function(date) {
+search <- function(query, date, date_format = "%m/%d/%Y") {
 
     if (count_elements(".//span[@title='Power Search']/a")) {
         modify_query()
@@ -57,27 +71,35 @@ search <- function(date) {
     print_log("Searching from", format(date[1], "%F"), 'to', format(date[2], "%F"))
 
     # Set search query
-    elem <- nexis$driver$findElement('xpath', ".//*[@id='searchTextAreaStyle']")
+    elem <- Nexis:::nexis$driver$findElement('xpath', ".//*[@id='searchTextAreaStyle']")
     elem$clearElement()
     elem$sendKeysToElement(list(query))
 
     Sys.sleep(1)
 
-    # Set date range
-    elem <- nexis$driver$findElement('xpath', ".//*[@id='fromDate']")
-    elem$clearElement()
-    elem$sendKeysToElement(list(format(date[1], "%m/%d/%Y")))
+    # User custom date range
+    elem <- Nexis:::nexis$driver$findElement('xpath', ".//*[@id='specifyDateDefaultStyle']/option[@value='from']")
+    elem$clickElement()
 
     Sys.sleep(1)
 
-    elem <- nexis$driver$findElement('xpath', ".//*[@id='toDate']")
+    # Set date range
+    elem <-  Nexis:::nexis$driver$findElement('xpath', ".//*[@id='fromDate']")
     elem$clearElement()
-    elem$sendKeysToElement(list(format(date[2], "%m/%d/%Y")))
+    elem$sendKeysToElement(list(format(date[1], date_format)))
+    elem$setElementAttribute("value", format(date[1], date_format))
+
+    Sys.sleep(1)
+
+    elem <- Nexis:::nexis$driver$findElement('xpath', ".//*[@id='toDate']")
+    elem$clearElement()
+    elem$sendKeysToElement(list(format(date[2], date_format)))
+    elem$setElementAttribute("value", format(date[2], date_format))
 
     Sys.sleep(1)
 
     # Send query
-    elem <- nexis$driver$findElement('xpath', ".//img[@title='Search']")
+    elem <- Nexis:::nexis$driver$findElement('xpath', ".//img[@title='Search']")
     elem$clickElement()
 
     while (!count_elements(".//*[@id='pageFooter']")) {
@@ -273,7 +295,7 @@ save_file <- function(date, range, last) {
 
 }
 
-get_html_name <- function (date, range, last) {
+get_html_name <- function(date, range, last) {
     name_html <- paste0('nexis_',
                         format(date[1], '%Y%m%d'), '-',
                         format(date[2], '%Y%m%d'), '_',
