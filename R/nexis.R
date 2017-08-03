@@ -1,6 +1,17 @@
 
 nexis <- new.env() # package-level local variable
 
+# function to extract Selenium driver (for development)
+#' @export
+get_driver <- function() {
+    nexis$driver
+}
+
+# function to set Selenium driver (for development)
+#' @export
+set_driver <- function(driver) {
+    nexis$driver <- driver
+}
 
 
 #' @export
@@ -30,11 +41,17 @@ get_directory <- function () {
 #' @export
 open_browser <- function (url, browser = "firefox") {
 
-    # assign global variable
-    nexis$driver <- remoteDriver(browserName = browser,
-                            extraCapabilities = get_prefs(browser), port=4444)
-    nexis$driver$open(silent = TRUE)
-    nexis$driver$navigate(url)
+    if (!length(get_session())) {
+        session <- get_session()
+        # assign global variable
+        nexis$driver <- remoteDriver(browserName = browser,
+                                extraCapabilities = get_prefs(browser), port=4444)
+        nexis$driver$open(silent = TRUE)
+        print_log("Opening browser")
+        nexis$driver$navigate(url)
+    } else {
+        print_log("Browser is already open:", paste0('"', nexis$driver$getTitle()[[1]], '"'))
+    }
 }
 
 #' check login status and move to Power Search
@@ -344,6 +361,16 @@ check_file_ending <- function (file, expect) {
     return(TRUE)
 }
 
+get_session <- function () {
+    tryCatch({
+        suppressMessages({
+            return(Nexis:::nexis$driver$getSession())
+        })
+    },
+    error = function(e) {
+        list()
+    })
+}
 
 print_log <- function(...) {
     cat(format(Sys.time(), "%F %X"),  ...)
