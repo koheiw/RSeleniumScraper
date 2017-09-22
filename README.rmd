@@ -80,6 +80,7 @@ url_login <- 'https://www.lexisnexis.com/start/shib/idpurlrd?entityID=https%3A%2
 #url_login <- 'http://www.lse.ac.uk/library'
 
 open_browser(url_login) # a new browser window will open
+driver <- get_driver() # backup browser connection (for development only)
 ```
 
 ### Download setting
@@ -98,11 +99,12 @@ unit <- 'month'
 ### Start download
 Finally, start automated download:
 ```{r eval=FALSE}
+#set_driver(driver) # restore browser connection (for development only)
 check_login()
 dates <- get_date_range(from, to, size, unit)
 for (i in seq_along(dates)) {
     if (is_completed(dates[[i]])) next
-    submit(query, dates[[i]])
+    submit(query, dates[[i]]) # please check if the default date format ("%m/%d/%Y") is currect
     if (is_zero(dates[[i]])) next
     ranges <- get_download_range(size = 500) # download 500 items each time
     for (j in seq_along(ranges)) {

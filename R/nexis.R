@@ -17,6 +17,8 @@ set_driver <- function(driver) {
 #' @export
 set_directory <- function (dir) {
 
+    if (missing(dir)) stop('dir must be a valid path to a directory')
+
     if (dir.exists(dir)) {
         nexis$dir_data <- dir
     } else {
@@ -41,17 +43,19 @@ get_directory <- function () {
 #' @export
 open_browser <- function (url, browser = "firefox") {
 
-    if (!is.character(url)) stop('url must be a valid URL')
+    if (missing(url) || !stri_startswith_fixed(url[1], 'http')) stop('url must be a valid URL')
     browser <- match.arg(browser)
 
     if (!length(get_session())) {
+        if (is.null(nexis$dir_temp) || is.null(nexis$dir_data))
+            stop('download directory must be set by set_directory() before opeing a brower')
         session <- get_session()
         # assign global variable
         nexis$driver <- remoteDriver(browserName = browser,
-                                extraCapabilities = get_prefs(browser), port=4444)
+                                     extraCapabilities = get_prefs(browser), port=4444)
         nexis$driver$open(silent = TRUE)
         print_log("Opening browser")
-        nexis$driver$navigate(url)
+        nexis$driver$navigate(url[1])
     } else {
         print_log("Browser is already open:", paste0('"', nexis$driver$getTitle()[[1]], '"'))
     }
@@ -84,8 +88,8 @@ check_login <- function() {
 #' @export
 submit <- function(query, date, date_format = "%m/%d/%Y") {
 
-    if (!is.character(query)) stop('query must be a character string')
-    if (!stri_length(query)) stop('query must be a valid search query')
+    if (missing(query) || !is.character(query)) stop('query must be a character string')
+    if (missing(date) || !stri_length(query)) stop('query must be a valid search query')
     if (!is.date(date[1]) || !is.date(date[2]))
         stop('date must be a pair of dates that defines the search period')
 
@@ -147,7 +151,7 @@ download <- function(date, range, last) {
 
     if (!is.date(date[1]) || !is.date(date[2]))
         stop('date must be a pair of dates that defines the search period')
-    if (is.numeric(range[1]) || is.numeric(range[2]))
+    if (!is.numeric(range[1]) || !is.numeric(range[2]))
         stop('range must be a pair of integer that defines the download range')
     print_log("Downloading from", range[1], 'to', range[2])
 
@@ -165,6 +169,12 @@ download <- function(date, range, last) {
         elem <- nexis$driver$findElement('xpath', ".//*[@id='rangetextbox']")
         elem$clearElement()
         elem$sendKeysToElement(list(paste0(range[1], '-', range[2])))
+        Sys.sleep(1)
+
+        # Set download format
+        elem <- nexis$driver$findElement('xpath', ".//option[@value='QDS_EF_HTML']")
+        elem$setElementAttribute("selected", "selected")
+        Sys.sleep(1)
     }
 
     # Download
