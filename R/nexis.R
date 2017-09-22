@@ -41,6 +41,9 @@ get_directory <- function () {
 #' @export
 open_browser <- function (url, browser = "firefox") {
 
+    if (!is.character(url)) stop('url must be a valid URL')
+    browser <- match.arg(browser)
+
     if (!length(get_session())) {
         session <- get_session()
         # assign global variable
@@ -79,7 +82,12 @@ check_login <- function() {
 #' @param format format the date. It should be "\%d\%m/\%Y" for Nexis UK, but
 #'   "\%m/\%d/\%Y" for other versions.
 #' @export
-search <- function(query, date, date_format = "%m/%d/%Y") {
+submit <- function(query, date, date_format = "%m/%d/%Y") {
+
+    if (!is.character(query)) stop('query must be a character string')
+    if (!stri_length(query)) stop('query must be a valid search query')
+    if (!is.date(date[1]) || !is.date(date[2]))
+        stop('date must be a pair of dates that defines the search period')
 
     if (count_elements(".//span[@title='Power Search']/a")) {
         modify_query()
@@ -137,6 +145,10 @@ download <- function(date, range, last) {
 
     reset_temp_file()
 
+    if (!is.date(date[1]) || !is.date(date[2]))
+        stop('date must be a pair of dates that defines the search period')
+    if (is.numeric(range[1]) || is.numeric(range[2]))
+        stop('range must be a pair of integer that defines the download range')
     print_log("Downloading from", range[1], 'to', range[2])
 
     # Open delivery window
@@ -238,6 +250,10 @@ get_download_range <- function(size = 500) {
 }
 
 # Internal functions -----------------------------------------------------------
+
+is.date <- function(x) {
+   class(x) == 'Date'
+}
 
 get_prefs <- function(browser) {
 

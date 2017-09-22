@@ -102,7 +102,7 @@ check_login()
 dates <- get_date_range(from, to, size, unit)
 for (i in seq_along(dates)) {
     if (is_completed(dates[[i]])) next
-    search(query, dates[[i]])
+    submit(query, dates[[i]])
     if (is_zero(dates[[i]])) next
     ranges <- get_download_range(size = 500) # download 500 items each time
     for (j in seq_along(ranges)) {
