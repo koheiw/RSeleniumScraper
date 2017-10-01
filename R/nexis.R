@@ -178,7 +178,7 @@ download <- function(date, range, last) {
         # elem$setElementAttribute("selected", "selected")
 
         js <- "document.getElementById('delFmt').selectedIndex = 1;"
-        driver$executeScript(js, args = list('null'))
+        nexis$driver$executeScript(js, args = list('null'))
         Sys.sleep(1)
     }
 
