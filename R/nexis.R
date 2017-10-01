@@ -172,8 +172,13 @@ download <- function(date, range, last) {
         Sys.sleep(1)
 
         # Set download format
-        elem <- nexis$driver$findElement('xpath', ".//option[@value='QDS_EF_HTML']")
-        elem$setElementAttribute("selected", "selected")
+        # js <- "document.getElementById('delFmt').selectedIndex = -1;" # reset
+        # driver$executeScript(js, args = list('null'))
+        # elem <- nexis$driver$findElement('xpath', ".//option[@value='QDS_EF_HTML']")
+        # elem$setElementAttribute("selected", "selected")
+
+        js <- "document.getElementById('delFmt').selectedIndex = 1;"
+        driver$executeScript(js, args = list('null'))
         Sys.sleep(1)
     }
 

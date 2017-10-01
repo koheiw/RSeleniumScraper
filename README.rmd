@@ -80,7 +80,7 @@ url_login <- 'https://www.lexisnexis.com/start/shib/idpurlrd?entityID=https%3A%2
 #url_login <- 'http://www.lse.ac.uk/library'
 
 open_browser(url_login) # a new browser window will open
-driver <- get_driver() # backup browser connection (for development only)
+#driver <- get_driver() # backup browser connection (for development only)
 ```
 
 ### Download setting
