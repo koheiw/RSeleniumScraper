@@ -115,9 +115,9 @@ for (i in seq_along(dates)) {
 ```
 ### Extract texts from downloaded files
 
-You can extract texts from the downloaded HTML files using `import_nexis()`.
+Once download has been completed, you can extract texts from the downloaded HTML files using `import_nexis()`.
 
-```{r}
+```{r eval=FALSE}
 data <- import_nexis('/home/kohei/Documents/Nexis')
 head(data)
 ```

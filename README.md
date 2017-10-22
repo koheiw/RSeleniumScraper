@@ -89,7 +89,7 @@ url_login <- 'https://www.lexisnexis.com/start/shib/idpurlrd?entityID=https%3A%2
 #url_login <- 'http://www.lse.ac.uk/library'
 
 open_browser(url_login) # a new browser window will open
-driver <- get_driver() # backup browser connection (for development only)
+#driver <- get_driver() # backup browser connection (for development only)
 ```
 
 ### Download setting
@@ -121,4 +121,13 @@ for (i in seq_along(dates)) {
         download(dates[[i]], ranges[[j]], tail(unlist(ranges), 1))
     }
 }
+```
+
+### Extract texts from downloaded files
+
+Once download has been completed, you can extract texts from the downloaded HTML files using `import_nexis()`.
+
+``` r
+data <- import_nexis('/home/kohei/Documents/Nexis')
+head(data)
 ```
