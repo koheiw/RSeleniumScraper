@@ -1,4 +1,15 @@
+#' extract texts and meta data from Nexis HTML files
+#'
+#' This extract headings, body texts and meta data (date, byline, length,
+#' secotion, edntion) from items in HTML files downloaded by the scraper.
+#' @param path either path to a HTML file or a directory that containe HTML files
+#' @param paragraph_separator a character to sperarate paragrahphs in body texts.
 #' @export
+#' @examples
+#' irt <- import_nexis('tests/html/irish-times_1995-06-12_0001.html')
+#' afp <- import_nexis('tests/html/afp_2013-03-12_0501.html')
+#' gur <- import_nexis('tests/html/guardian_1986-01-01_0001.html')
+#' all <- import_nexis('tests/html')
 import_nexis <- function(path, paragraph_separator = '|'){
 
     if (dir.exists(path)) {
@@ -24,7 +35,7 @@ import_html <- function(file, sep = ' '){
     #Convert format
     cat('Reading', file, '\n')
 
-    line <- readLines(file, encoding = "UTF-8")
+    line <- readLines(file, warn = FALSE, encoding = "UTF-8")
     html <- paste0(fix_html(line), collapse = "\n")
 
     #Load as DOM object
