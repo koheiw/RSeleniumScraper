@@ -113,3 +113,17 @@ for (i in seq_along(dates)) {
 }
 
 ```
+### Extract texts from downloaded files
+
+`might need libxml2-dev via apt-get command`
+
+```{r}
+irt <- import_nexis('/home/kohei/packages/Nexis/tests/html/irish-times_1995-06-12_0001.html')
+afp <- import_nexis('/home/kohei/packages/Nexis/tests/html/afp_2013-03-12_0501.html')
+gur <- import_nexis('/home/kohei/packages/Nexis/tests/html/guardian_1986-01-01_0001.html')
+head(irt)
+```
+
+```{r}
+all <- import_nexis('/home/kohei/packages/Nexis/tests/html')
+```
