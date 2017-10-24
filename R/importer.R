@@ -4,13 +4,15 @@
 #' secotion, edntion) from items in HTML files downloaded by the scraper.
 #' @param path either path to a HTML file or a directory that containe HTML files
 #' @param paragraph_separator a character to sperarate paragrahphs in body texts.
+#' @param raw_date return date of publication without parsing if \code{TRUE}.
 #' @export
 #' @examples
 #' irt <- import_nexis('tests/html/irish-times_1995-06-12_0001.html')
 #' afp <- import_nexis('tests/html/afp_2013-03-12_0501.html')
 #' gur <- import_nexis('tests/html/guardian_1986-01-01_0001.html')
-#' all <- import_nexis('tests/html')
-import_nexis <- function(path, paragraph_separator = '|'){
+#' spg <- import_nexis('tests/html/spiegel_2012-02-01_0001.html', raw_date = TRUE)
+#' all <- import_nexis('tests/html', raw_date = TRUE)
+import_nexis <- function(path, paragraph_separator = '|', raw_date = FALSE){
 
     if (dir.exists(path)) {
         dir <- path
@@ -19,18 +21,18 @@ import_nexis <- function(path, paragraph_separator = '|'){
         for(f in file){
             #print(file)
             if(stri_detect_regex(f, '\\.html$|\\.htm$|\\.xhtml$', ignore.case = TRUE)){
-                data <- rbind(data, import_html(f, paragraph_separator))
+                data <- rbind(data, import_html(f, paragraph_separator, raw_date))
             }
         }
     } else if (file.exists(path)) {
-        data <- import_html(path, paragraph_separator)
+        data <- import_html(path, paragraph_separator, raw_date)
     } else {
-        stop(path, "does not exist")
+        stop(path, " does not exist")
     }
     return(data)
 }
 
-import_html <- function(file, sep = ' '){
+import_html <- function(file, paragraph_separator, raw_date){
 
     #Convert format
     cat('Reading', file, '\n')
@@ -42,14 +44,14 @@ import_html <- function(file, sep = ' '){
     dom <- htmlParse(html, encoding = "UTF-8")
     data <- data.frame()
     for(doc in getNodeSet(dom, '//doc')){
-        data <- rbind(data, extract_attrs(doc))
+        data <- rbind(data, extract_attrs(doc, paragraph_separator, raw_date))
     }
     colnames(data) <- c('pub', 'edition', 'date', 'byline', 'length', 'section', 'head', 'body')
     return(data)
 }
 
 
-extract_attrs <- function(node, sep = "|") {
+extract_attrs <- function(node, paragraph_separator, raw_date) {
 
     attrs <- list(pub = '', edition = '', date = '', byline = '', length = '', section = '', head = '', body = '')
 
@@ -75,12 +77,16 @@ extract_attrs <- function(node, sep = "|") {
         if (i == 2) {
             attrs$pub <- stri_trim(s)
         } else if (i == 3) {
-            m <- stri_match_first_regex(s, regex)
-            if (all(!is.na(m[1,2:4]))) {
-                attrs$date <- format(as.Date(paste0(m[1,2:4], collapse = ' '), '%B %d %Y'), '%Y-%m-%d')
-            }
-            if (!is.na(m[1,8])) {
-                attrs$edition <- stri_trim(m[1,8])
+            if (raw_date) {
+                attrs$date <- stri_trim(s)
+            } else {
+                m <- stri_match_first_regex(s, regex)
+                if (all(!is.na(m[1,2:4]))) {
+                    attrs$date <- format(as.Date(paste0(m[1,2:4], collapse = ' '), '%B %d %Y'), '%Y-%m-%d')
+                }
+                if (!is.na(m[1,8])) {
+                    attrs$edition <- stri_trim(m[1,8])
+                }
             }
         } else if (i == 4) {
             attrs$head <- stri_trim(s)
@@ -95,7 +101,7 @@ extract_attrs <- function(node, sep = "|") {
                        !stri_detect_regex(s, "^(BYLINE|URL|LOAD-DATE|LANGUAGE|GRAPHIC|PUBLICATION-TYPE|JOURNAL-CODE): ")){
                 ps <- getNodeSet(div, './/p')
                 p <- sapply(ps, xmlValue)
-                attrs$body <- stri_trim(paste0(p, collapse = paste0(' ', sep, ' ')))
+                attrs$body <- stri_trim(paste0(p, collapse = paste0(' ', paragraph_separator, ' ')))
                 n_max = n
             }
         }
