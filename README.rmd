@@ -1,8 +1,10 @@
 ---
 title: "Nexis UK scraper"
 author: Kohei Watanabe
-date: August 2, 2017
+date: October 25, 2017
 output: 
+    pdf_document:
+        toc: true
     md_document:
         variant: markdown_github
 ---
