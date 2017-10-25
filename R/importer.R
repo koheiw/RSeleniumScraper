@@ -4,15 +4,18 @@
 #' secotion, edntion) from items in HTML files downloaded by the scraper.
 #' @param path either path to a HTML file or a directory that containe HTML files
 #' @param paragraph_separator a character to sperarate paragrahphs in body texts.
+#' @param language_date a character to specify langauge-dependent date format.
 #' @param raw_date return date of publication without parsing if \code{TRUE}.
 #' @export
 #' @examples
 #' irt <- import_nexis('tests/html/irish-times_1995-06-12_0001.html')
 #' afp <- import_nexis('tests/html/afp_2013-03-12_0501.html')
 #' gur <- import_nexis('tests/html/guardian_1986-01-01_0001.html')
-#' spg <- import_nexis('tests/html/spiegel_2012-02-01_0001.html', raw_date = TRUE)
+#' spg <- import_nexis('tests/html/spiegel_2012-02-01_0001.html', language_date = 'german')
 #' all <- import_nexis('tests/html', raw_date = TRUE)
-import_nexis <- function(path, paragraph_separator = '|', raw_date = FALSE){
+import_nexis <- function(path, paragraph_separator = '|', language_date = c('english', 'german'), raw_date = FALSE){
+
+    language_date <- match.arg(language_date)
 
     if (dir.exists(path)) {
         dir <- path
@@ -21,18 +24,18 @@ import_nexis <- function(path, paragraph_separator = '|', raw_date = FALSE){
         for(f in file){
             #print(file)
             if(stri_detect_regex(f, '\\.html$|\\.htm$|\\.xhtml$', ignore.case = TRUE)){
-                data <- rbind(data, import_html(f, paragraph_separator, raw_date))
+                data <- rbind(data, import_html(f, paragraph_separator, language_date, raw_date))
             }
         }
     } else if (file.exists(path)) {
-        data <- import_html(path, paragraph_separator, raw_date)
+        data <- import_html(path, paragraph_separator, language_date, raw_date)
     } else {
         stop(path, " does not exist")
     }
     return(data)
 }
 
-import_html <- function(file, paragraph_separator, raw_date){
+import_html <- function(file, paragraph_separator, language_date, raw_date){
 
     #Convert format
     cat('Reading', file, '\n')
@@ -44,61 +47,75 @@ import_html <- function(file, paragraph_separator, raw_date){
     dom <- htmlParse(html, encoding = "UTF-8")
     data <- data.frame()
     for(doc in getNodeSet(dom, '//doc')){
-        data <- rbind(data, extract_attrs(doc, paragraph_separator, raw_date))
+        data <- rbind(data, extract_attrs(doc, paragraph_separator, language_date, raw_date))
     }
     colnames(data) <- c('pub', 'edition', 'date', 'byline', 'length', 'section', 'head', 'body')
     return(data)
 }
 
 
-extract_attrs <- function(node, paragraph_separator, raw_date) {
+extract_attrs <- function(node, paragraph_separator, language_date, raw_date) {
 
     attrs <- list(pub = '', edition = '', date = '', byline = '', length = '', section = '', head = '', body = '')
 
-    regex <- paste0(c('(January|February|March|April|May|June|July|August|September|October|November|December)',
-                     '[, ]+([0-9]{1,2})',
-                     '[, ]+([0-9]{4})',
-                     '([,; ]+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday))?',
-                     '([, ]+(.+))?'), collapse = '')
+    if (language_date == 'german') {
+        regex <- paste0(c('([0-9]{1,2})',
+                          '[. ]+(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)',
+                          '[ ]+([0-9]{4})',
+                          '([ ]+(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag))?',
+                          '([, ]+(.+))?'), collapse = '')
+    } else {
+        regex <- paste0(c('(January|February|March|April|May|June|July|August|September|October|November|December)',
+                          '[, ]+([0-9]{1,2})',
+                          '[, ]+([0-9]{4})',
+                          '([,; ]+(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday))?',
+                          '([, ]+(.+))?'), collapse = '')
+    }
 
     n_max <- 0;
     i <- 1
     #print(node)
     for(div in getNodeSet(node, './/div')){
 
-        s <- xmlValue(div, './/text()')
-        s <- clean_text(s)
-        n <- stri_length(s);
+        str <- xmlValue(div, './/text()')
+        str <- clean_text(str)
+        n <- stri_length(str);
         if (is.na(n)) next
 
         #cat('----------------\n')
         #cat(i, stri_trim(s), "\n")
 
         if (i == 2) {
-            attrs$pub <- stri_trim(s)
+            attrs$pub <- stri_trim(str)
         } else if (i == 3) {
             if (raw_date) {
-                attrs$date <- stri_trim(s)
+                attrs$date <- stri_trim(str)
             } else {
-                m <- stri_match_first_regex(s, regex)
+                m <- stri_match_first_regex(str, regex)
                 if (all(!is.na(m[1,2:4]))) {
-                    attrs$date <- format(as.Date(paste0(m[1,2:4], collapse = ' '), '%B %d %Y'), '%Y-%m-%d')
+                    date <- paste0(m[1,2:4], collapse = ' ')
+                    if (language_date == 'german') {
+                        datetime <- stri_datetime_parse(date, 'd MMMM Y', locale = 'de_DE')
+                    } else {
+                        datetime <- stri_datetime_parse(date, 'MMMM d Y', locale = 'en_EN')
+                    }
+                    attrs$date <- stri_datetime_format(datetime, 'yyyy-MM-dd')
                 }
                 if (!is.na(m[1,8])) {
                     attrs$edition <- stri_trim(m[1,8])
                 }
             }
         } else if (i == 4) {
-            attrs$head <- stri_trim(s)
+            attrs$head <- stri_trim(str)
         } else if (i >= 5) {
-            if (stri_detect_regex(s, "^BYLINE: ")) {
-                attrs$byline = stri_trim(stri_replace_first_regex(s, "^BYLINE: ", ''))
-            } else if (stri_detect_regex(s, "^SECTION: ")) {
-                attrs$section = stri_trim(stri_replace_first_regex(s, "^SECTION: ", ''));
-            } else if (stri_detect_regex(s, "^LENGTH: ")) {
-                attrs$length = stri_trim(stri_replace_all_regex(s, "[^0-9]", ''))
+            if (stri_detect_regex(str, "^BYLINE: ")) {
+                attrs$byline = stri_trim(stri_replace_first_regex(str, "^BYLINE: ", ''))
+            } else if (stri_detect_regex(str, "^SECTION: ")) {
+                attrs$section = stri_trim(stri_replace_first_regex(str, "^SECTION: ", ''));
+            } else if (stri_detect_regex(str, "^LENGTH: ")) {
+                attrs$length = stri_trim(stri_replace_all_regex(str, "[^0-9]", ''))
             } else if (!is.null(attrs$length) && n > n_max &&
-                       !stri_detect_regex(s, "^(BYLINE|URL|LOAD-DATE|LANGUAGE|GRAPHIC|PUBLICATION-TYPE|JOURNAL-CODE): ")){
+                       !stri_detect_regex(str, "^(BYLINE|URL|LOAD-DATE|LANGUAGE|GRAPHIC|PUBLICATION-TYPE|JOURNAL-CODE): ")){
                 ps <- getNodeSet(div, './/p')
                 p <- sapply(ps, xmlValue)
                 attrs$body <- stri_trim(paste0(p, collapse = paste0(' ', paragraph_separator, ' ')))

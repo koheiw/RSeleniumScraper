@@ -4,12 +4,17 @@
 \alias{import_nexis}
 \title{extract texts and meta data from Nexis HTML files}
 \usage{
-import_nexis(path, paragraph_separator = "|")
+import_nexis(path, paragraph_separator = "|", language_date = c("english",
+  "german"), raw_date = FALSE)
 }
 \arguments{
 \item{path}{either path to a HTML file or a directory that containe HTML files}
 
 \item{paragraph_separator}{a character to sperarate paragrahphs in body texts.}
+
+\item{language_date}{a character to specify langauge-dependent date format.}
+
+\item{raw_date}{return date of publication without parsing if \code{TRUE}.}
 }
 \description{
 This extract headings, body texts and meta data (date, byline, length,
@@ -19,5 +24,6 @@ secotion, edntion) from items in HTML files downloaded by the scraper.
 irt <- import_nexis('tests/html/irish-times_1995-06-12_0001.html')
 afp <- import_nexis('tests/html/afp_2013-03-12_0501.html')
 gur <- import_nexis('tests/html/guardian_1986-01-01_0001.html')
-all <- import_nexis('tests/html')
+spg <- import_nexis('tests/html/spiegel_2012-02-01_0001.html', language_date = 'german')
+all <- import_nexis('tests/html', raw_date = TRUE)
 }
