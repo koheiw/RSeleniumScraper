@@ -50,6 +50,8 @@ import_html <- function(file, paragraph_separator, language_date, raw_date){
         data <- rbind(data, extract_attrs(doc, paragraph_separator, language_date, raw_date))
     }
     colnames(data) <- c('pub', 'edition', 'date', 'byline', 'length', 'section', 'head', 'body')
+    data$file <- basename(file)
+
     return(data)
 }
 
