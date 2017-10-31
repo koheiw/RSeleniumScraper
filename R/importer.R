@@ -60,7 +60,7 @@ extract_attrs <- function(node, paragraph_separator, language_date, raw_date) {
 
     if (language_date == 'german') {
         regex <- paste0(c('([0-9]{1,2})',
-                          '[. ]+(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)',
+                          '[. ]+(Januar|Februar|März|Maerz|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember)',
                           '[ ]+([0-9]{4})',
                           '([ ]+(Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag|Sonntag))?',
                           '([, ]+(.+))?'), collapse = '')
