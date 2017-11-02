@@ -11,6 +11,7 @@
 #' irt <- import_nexis('tests/html/irish-times_1995-06-12_0001.html')
 #' afp <- import_nexis('tests/html/afp_2013-03-12_0501.html')
 #' gur <- import_nexis('tests/html/guardian_1986-01-01_0001.html')
+#' sun <- import_nexis('tests/html/sun_2000-11-01_0001.html')
 #' spg <- import_nexis('tests/html/spiegel_2012-02-01_0001.html', language_date = 'german')
 #' all <- import_nexis('tests/html', raw_date = TRUE)
 import_nexis <- function(path, paragraph_separator = '|', language_date = c('english', 'german'), raw_date = FALSE){
@@ -97,9 +98,9 @@ extract_attrs <- function(node, paragraph_separator, language_date, raw_date) {
                 if (all(!is.na(m[1,2:4]))) {
                     date <- paste0(m[1,2:4], collapse = ' ')
                     if (language_date == 'german') {
-                        datetime <- stri_datetime_parse(date, 'd MMMM Y', locale = 'de_DE')
+                        datetime <- stri_datetime_parse(date, 'd MMMM y', locale = 'de_DE')
                     } else {
-                        datetime <- stri_datetime_parse(date, 'MMMM d Y', locale = 'en_EN')
+                        datetime <- stri_datetime_parse(date, 'MMMM d y', locale = 'en_EN')
                     }
                     attrs$date <- stri_datetime_format(datetime, 'yyyy-MM-dd')
                 }
