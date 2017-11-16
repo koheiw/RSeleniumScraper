@@ -62,12 +62,12 @@ Since this package is in a private repository, you cannot use `devtools::install
 
 ```{r eval=FALSE}
 devtools::install("/home/kohei/Downloads/Nexis-master/") # unzipped folder
-require('Nexis')
 ```
 ### File location
 You first have to set a directory where downloaded files are saved:
 
 ```{r eval=FALSE}
+require('Nexis')
 set_directory('/home/kohei/Documents/Nexis')
 ```
 
