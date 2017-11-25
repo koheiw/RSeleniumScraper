@@ -135,27 +135,18 @@ extract_attrs <- function(node, paragraph_separator, language_date, raw_date) {
 }
 
 clean_text <- function(str) {
-    str = stri_replace_all_regex(str, '/[[:^print:]]/', ' '); # This works better
-    str = stri_replace_all_fixed(str, "\r", ' ')
-    str = stri_replace_all_fixed(str, "\n", ' ')
-    str = stri_replace_all_fixed(str, "\t", ' ')
-    str = stri_replace_all_regex(str, "\\s\\s+", ' ')
-    str = stri_trim(str);
+    str <- stri_replace_all_regex(str, '[[:^print:]]', ' ');
+    str <- stri_replace_all_regex(str, "[\\r\\n\\t]", ' ')
+    str <- stri_replace_all_regex(str, "\\s\\s+", ' ')
+    str <- stri_trim(str);
     return(str)
 }
 
 fix_html <- function(line){
-    d <- 0
-    for (i in seq_along(line)) {
-        l <- line[i]
-        if (stri_detect_fixed(l, '<DOC NUMBER=1>')) d <- d + 1
-        l = stri_replace_all_fixed(l, '<!-- Hide XML section from browser', '');
-        l = stri_replace_all_fixed(l, '<DOC NUMBER=1>', paste0('<DOC ID="doc_id_',  d,  '">', collapse = ''))
-        l = stri_replace_all_fixed(l, '<DOCFULL> -->', '<DOCFULL>');
-        l = stri_replace_all_fixed(l, '</DOC> -->', '</DOC>');
-        l = stri_replace_all_fixed(l, '<BR>', '<BR> ');
-        line[i] <- l
-    }
+    line <- stri_replace_all_fixed(line, '<!-- Hide XML section from browser', '');
+    line <- stri_replace_all_fixed(line, '<DOCFULL> -->', '<DOCFULL>');
+    line <- stri_replace_all_fixed(line, '</DOC> -->', '</DOC>');
+    line <- stri_replace_all_fixed(line, '<BR>', '<BR> ');
     return(line)
 }
 
