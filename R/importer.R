@@ -14,7 +14,8 @@
 #' sun <- import_nexis('tests/html/sun_2000-11-01_0001.html')
 #' spg <- import_nexis('tests/html/spiegel_2012-02-01_0001.html', language_date = 'german')
 #' all <- import_nexis('tests/html', raw_date = TRUE)
-import_nexis <- function(path, paragraph_separator = '|', language_date = c('english', 'german'), raw_date = FALSE){
+import_nexis <- function(path, paragraph_separator = '|', language_date = c('english', 'german'),
+                         raw_date = FALSE){
 
     language_date <- match.arg(language_date)
 
@@ -24,11 +25,16 @@ import_nexis <- function(path, paragraph_separator = '|', language_date = c('eng
         data <- data.frame()
         for(f in file){
             #print(file)
-            if(stri_detect_regex(f, '\\.html$|\\.htm$|\\.xhtml$', ignore.case = TRUE)){
-                data <- rbind(data, import_html(f, paragraph_separator, language_date, raw_date))
+            if(stri_detect_regex(f, '\\.html$|\\.htm$|\\.xhtml$', ignore.case = TRUE) && file.size(f)) {
+                tryCatch({
+                    data <- rbind(data, import_html(f, paragraph_separator, language_date, raw_date))
+                },
+                error = function(e) {
+                    warning("Invalid file format: ", f)
+                })
             }
         }
-    } else if (file.exists(path)) {
+    } else if (file.exists(path) && file.size(path)) {
         data <- import_html(path, paragraph_separator, language_date, raw_date)
     } else {
         stop(path, " does not exist")
