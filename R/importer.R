@@ -8,13 +8,16 @@
 #' @param raw_date return date of publication without parsing if \code{TRUE}.
 #' @export
 #' @examples
+#' \dontrun{
 #' irt <- import_nexis('tests/html/irish-times_1995-06-12_0001.html')
 #' afp <- import_nexis('tests/html/afp_2013-03-12_0501.html')
 #' gur <- import_nexis('tests/html/guardian_1986-01-01_0001.html')
 #' sun <- import_nexis('tests/html/sun_2000-11-01_0001.html')
 #' spg <- import_nexis('tests/html/spiegel_2012-02-01_0001.html', language_date = 'german')
 #' all <- import_nexis('tests/html', raw_date = TRUE)
-import_nexis <- function(path, paragraph_separator = '|', language_date = c('english', 'german'), raw_date = FALSE){
+#' }
+import_nexis <- function(path, paragraph_separator = '|', language_date = c('english', 'german'),
+                         raw_date = FALSE){
 
     language_date <- match.arg(language_date)
 
@@ -24,11 +27,16 @@ import_nexis <- function(path, paragraph_separator = '|', language_date = c('eng
         data <- data.frame()
         for(f in file){
             #print(file)
-            if(stri_detect_regex(f, '\\.html$|\\.htm$|\\.xhtml$', ignore.case = TRUE)){
-                data <- rbind(data, import_html(f, paragraph_separator, language_date, raw_date))
+            if(stri_detect_regex(f, '\\.html$|\\.htm$|\\.xhtml$', ignore.case = TRUE) && file.size(f)) {
+                tryCatch({
+                    data <- rbind(data, import_html(f, paragraph_separator, language_date, raw_date))
+                },
+                error = function(e) {
+                    warning("Invalid file format: ", f)
+                })
             }
         }
-    } else if (file.exists(path)) {
+    } else if (file.exists(path) && file.size(path)) {
         data <- import_html(path, paragraph_separator, language_date, raw_date)
     } else {
         stop(path, " does not exist")
@@ -36,6 +44,7 @@ import_nexis <- function(path, paragraph_separator = '|', language_date = c('eng
     return(data)
 }
 
+#' @import XML
 import_html <- function(file, paragraph_separator, language_date, raw_date){
 
     #Convert format
@@ -56,7 +65,7 @@ import_html <- function(file, paragraph_separator, language_date, raw_date){
     return(data)
 }
 
-
+#' @import stringi
 extract_attrs <- function(node, paragraph_separator, language_date, raw_date) {
 
     attrs <- list(pub = '', edition = '', date = '', byline = '', length = '', section = '', head = '', body = '')
@@ -134,6 +143,7 @@ extract_attrs <- function(node, paragraph_separator, language_date, raw_date) {
     return(as.data.frame(attrs, stringsAsFactors = FALSE))
 }
 
+#' @import stringi
 clean_text <- function(str) {
     str <- stri_replace_all_regex(str, '[[:^print:]]', ' ');
     str <- stri_replace_all_regex(str, "[\\r\\n\\t]", ' ')
@@ -142,6 +152,7 @@ clean_text <- function(str) {
     return(str)
 }
 
+#' @import stringi
 fix_html <- function(line){
     line <- stri_replace_all_fixed(line, '<!-- Hide XML section from browser', '');
     line <- stri_replace_all_fixed(line, '<DOCFULL> -->', '<DOCFULL>');

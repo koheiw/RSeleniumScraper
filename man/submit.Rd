@@ -13,7 +13,7 @@ submit(query, date, date_format = "\%m/\%d/\%Y")
 date is the first day and second element is the last day of the serach
 period.}
 
-\item{format}{format the date. It should be "\%d\%m/\%Y" for Nexis UK, but
+\item{date_format}{format the date. It should be "\%d\%m/\%Y" for Nexis UK, but
 "\%m/\%d/\%Y" for other versions.}
 }
 \description{

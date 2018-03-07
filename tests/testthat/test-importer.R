@@ -42,3 +42,10 @@ test_that("importer can read German newswires", {
     expect_true(all(stri_detect_regex(spg$date, '^\\d{4}-\\d{2}-\\d{2}$')))
 
 })
+
+test_that("importer can read from folder", {
+
+    all <- import_nexis('../../tests/html/')
+    expect_equal(nrow(all), 166 + 262 + 32 + 74 + 49)
+
+})

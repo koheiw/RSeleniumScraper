@@ -83,7 +83,7 @@ check_login <- function() {
 #' @param date a vector Date object created by \code{get_date_range()}. The fist
 #'   date is the first day and second element is the last day of the serach
 #'   period.
-#' @param format format the date. It should be "\%d\%m/\%Y" for Nexis UK, but
+#' @param date_format format the date. It should be "\%d\%m/\%Y" for Nexis UK, but
 #'   "\%m/\%d/\%Y" for other versions.
 #' @export
 submit <- function(query, date, date_format = "%m/%d/%Y") {
@@ -375,6 +375,7 @@ count_elements <- function(query) {
     })
 }
 
+#' @importFrom utils tail
 check_file_ending <- function (file, expect) {
 
     if (!file.exists(file))

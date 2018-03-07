@@ -1,7 +1,7 @@
 Package: Nexis
 Type: Package
 Title: The Nexis scraper in R
-Version: 0.1.0
+Version: 0.1.1
 Author: Kohei Watanabe
 Maintainer: Kohei Watanabe <watanabe.kohei@gmail.com>
 Description: Web scraper for autoamted download from the Nexis database
