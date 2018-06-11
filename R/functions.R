@@ -202,7 +202,11 @@ get_prefs <- function(browser) {
                      'text/html',
                      'text/plain',
                      'application/msword',
-                     sep = ',')))
+                     'application/vnd.ms-excel',
+                     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                     sep = ',')
+                 ))
 
     }
     return(prefs)
