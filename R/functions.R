@@ -24,12 +24,6 @@ set_directory <- function (dir) {
         dir.create(dir)
         config$dir_data <- dir
     }
-    if (dir.exists(paste0(config$dir_data, '/temp'))) {
-        config$dir_temp <- paste0(config$dir_data, '/temp')
-    } else {
-        dir.create(paste0(config$dir_data, '/temp'))
-        config$dir_temp <- paste0(config$dir_data, '/temp')
-    }
 }
 
 #' @export
@@ -42,6 +36,15 @@ open_browser <- function (url, browser = "firefox") {
 
     if (missing(url) || !stri_startswith_fixed(url[1], 'http')) stop('url must be a valid URL')
     browser <- match.arg(browser)
+
+    if (.Platform$OS.type == 'windows') {
+        config$dir_temp <- paste(tempdir(), "download", sep = '\\')
+    } else {
+        config$dir_temp <- paste(tempdir(), "download", sep = '/')
+    }
+    if (!dir.exists(config$dir_temp)) {
+        dir.create(config$dir_temp)
+    }
 
     if (!length(get_session())) {
         if (is.null(config$dir_temp) || is.null(config$dir_data))
