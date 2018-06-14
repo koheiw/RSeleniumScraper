@@ -1,7 +1,7 @@
 Package: RSeleniumScraper
 Type: Package
 Title: A set of userful functions to develop web scraper on RSelenium
-Version: 0.2
+Version: 0.2.1
 Author: Kohei Watanabe
 Maintainer: Kohei Watanabe <watanabe.kohei@gmail.com>
 Description:  A set of userful functions to develop web scraper on RSelenium
