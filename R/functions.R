@@ -37,6 +37,7 @@ open_browser <- function (url, browser = "firefox") {
     if (missing(url) || !stri_startswith_fixed(url[1], 'http')) stop('url must be a valid URL')
     browser <- match.arg(browser)
 
+    # temporary file
     if (.Platform$OS.type == 'windows') {
         config$dir_temp <- paste(tempdir(), "download", sep = '\\')
     } else {
@@ -46,10 +47,10 @@ open_browser <- function (url, browser = "firefox") {
         dir.create(config$dir_temp)
     }
 
+    # data file
+    config$dir_data <- getwd()
+
     if (!length(get_session())) {
-        if (is.null(config$dir_temp) || is.null(config$dir_data))
-            stop('download directory must be set by set_directory() before opeing a brower')
-        session <- get_session()
         # assign global variable
         config$driver <- remoteDriver(browserName = browser,
                                       extraCapabilities = get_prefs(browser), port=4444)
@@ -187,6 +188,53 @@ get_session <- function () {
     })
 }
 
+#' @export
+check_zipfile <- function() {
+    tryCatch({
+        unzip(list.files(get_config("dir_temp"), full.names = TRUE)[1], list = TRUE)
+        return(TRUE)
+    },
+    error = function(e) {
+        return(FALSE)
+    },
+    warning = function(e) {
+        return(FALSE)
+    })
+}
+
+#' @export
+save_file <- function(path) {
+    file.rename(list.files(get_config("dir_temp"), full.names = TRUE)[1], path)
+}
+
+#' @export
+get_element_size <- function(query) {
+
+    tryCatch({
+        suppressMessages({
+            elem <- get_driver()$findElement('xpath', query)
+            size <- elem$getElementSize()
+            return(c(size$height, size$width))
+        })
+    },
+    error = function(e) {
+        return(c(0, 0))
+    })
+}
+
+#' @export
+wait_for <- function(query, timeout = 120) {
+    t <- 0
+    while (!count_elements(query)) {
+        Sys.sleep(1)
+        t <- t + 1
+        if (t > timeout) {
+            invisible(NULL)
+        }
+    }
+    Sys.sleep(1)
+    invisible(NULL)
+}
 
 # Internal functions -----------------------------------------------------------
 
