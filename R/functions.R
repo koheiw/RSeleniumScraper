@@ -159,6 +159,17 @@ count_elements <- function(query) {
 }
 
 #' @export
+find_element <- function(value) {
+    get_driver()$findElement('xpath', value)
+}
+
+#' @export
+find_elements <- function(value) {
+    get_driver()$findElements('xpath', value)
+}
+
+
+#' @export
 check_file_ending <- function (file, expect) {
 
     if (!file.exists(file))
