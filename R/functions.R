@@ -159,12 +159,16 @@ count_elements <- function(query) {
 }
 
 #' @export
-find_element <- function(value) {
+find_element <- function(value, wait = FALSE) {
+    while(wait && !count_elements(value))
+        Sys.sleep(1)
     get_driver()$findElement('xpath', value)
 }
 
 #' @export
-find_elements <- function(value) {
+find_elements <- function(value, wait = FALSE) {
+    while(wait && !count_elements(value))
+        Sys.sleep(1)
     get_driver()$findElements('xpath', value)
 }
 
@@ -272,14 +276,4 @@ get_prefs <- function(browser) {
 
     }
     return(prefs)
-}
-
-#' @export
-find_element <- function(value) {
-    get_driver()$findElement('xpath', value)
-}
-
-#' @export
-find_elements <- function(value) {
-    get_driver()$findElements('xpath', value)
 }
