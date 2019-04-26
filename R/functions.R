@@ -149,7 +149,7 @@ reset_temp_file <- function() {
 count_elements <- function(query) {
     tryCatch({
         suppressMessages({
-            elems <- config$driver$findElement('xpath', query)
+            elems <- config$driver$findElements('xpath', query)
             return(length(elems))
         })
     },
