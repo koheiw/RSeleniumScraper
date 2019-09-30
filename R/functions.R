@@ -96,7 +96,7 @@ is_completed <- function(prefix, date, ext) {
 }
 
 #' @export
-get_date_range <- function(from, to, size = 1, unit = c('month', 'week', 'day')) {
+get_date_range <- function(from, to, size = 1, unit = c('year', 'month', 'week', 'day')) {
 
     unit <- match.arg(unit)
 
@@ -109,6 +109,8 @@ get_date_range <- function(from, to, size = 1, unit = c('month', 'week', 'day'))
         index <- as.integer(format(date, '%Y%U'))
     } else if (unit == 'month') {
         index <- as.integer(format(date, '%Y%m'))
+    } else if (unit == 'year') {
+        index <- as.integer(format(date, '%Y'))
     }
     index <- index - min(index) + 1
     dates <- lapply(split(date, ceiling(index / size)), range)
@@ -174,7 +176,7 @@ find_elements <- function(value, wait = FALSE) {
 
 
 #' @export
-check_file_ending <- function (file, expect) {
+        check_file_ending <- function (file, expect) {
 
     if (!file.exists(file))
         return(FALSE)
