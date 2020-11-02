@@ -19,9 +19,6 @@ open_browser <- function (url, browser = "firefox") {
         dir.create(config$dir_temp)
     }
 
-    # data file
-    config$dir_data <- getwd()
-
     if (!length(get_session())) {
         # assign global variable
         config$driver <- remoteDriver(browserName = browser,
