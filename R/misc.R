@@ -12,15 +12,16 @@ get_date_range <- function(from, to, size = 1, unit = c('year', 'month', 'week',
     to <- as.Date(to)
     date <- seq.Date(from, to, by = 1)
     if (unit == 'day') {
-        index <- as.integer(date)
+        index <- format(date, "%Y%m%d")
     } else if (unit == 'week') {
-        index <- as.integer(format(date, '%Y%U'))
+        index <- format(date, '%Y%U')
     } else if (unit == 'month') {
-        index <- as.integer(format(date, '%Y%m'))
+        index <- format(date, '%Y%m')
     } else if (unit == 'year') {
-        index <- as.integer(format(date, '%Y'))
+        index <- format(date, '%Y')
     }
-    index <- index - min(index) + 1
+    
+    index <- as.integer(factor(index))
     dates <- lapply(split(date, ceiling(index / size)), range)
     names(dates) <- NULL
     return(dates)
