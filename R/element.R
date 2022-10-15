@@ -4,7 +4,7 @@
 #' @param browser web browser to start
 #' @import RSelenium
 #' @export
-open_browser <- function (url, browser = "firefox") {
+open_browser <- function (url, browser) {
 
     if (missing(url) || !stri_startswith_fixed(url[1], 'http')) stop('url must be a valid URL')
     browser <- match.arg(browser)
